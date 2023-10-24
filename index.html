@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STL App</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #renderCanvas {
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+    #sidebar {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100%;
+      background-color: #f0f0f0;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+      border-left: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h2>Properties</h2>
+            <strong>Name:</strong> <span id="name"></span>
+        <ul>
+            <li><strong>Position:</strong> <span id="position"></span></li>
+            <li><strong>Rotation:</strong> <span id="rotation"></span></li>
+            <li><strong>Color:</strong> <span id="color"></span></li>
+        </ul>
+        <h2>Move Object</h2>
+        <button>Q (↑ x Axis)</button>
+        <button>A (↓ x Axis)</button>
+        <button>W (↑ y Axis)</button>
+        <button>S (↓ y Axis)</button>
+        <button>E (↑ z Axis)</button>
+        <button>D (↓ z Axis)</button>
+        <br>
+        <h2>Rotate Object</h2>
+        <button>R (⤵ x Axis)</button>
+        <button>F (⤴ x Axis)</button>
+        <button>T (⤵ y Axis)</button>
+        <button>G (⤴ y Axis)</button>
+        <button>Y (⤵ z Axis)</button>
+        <button>H (⤴ z Axis)</button>
+        <br>
+        <h2>Change Color</h2>
+        <input type="color" id="colorPicker">
+        <button onclick="changeColor()">Apply Color (Z)</button>
+        <br>
+        <button id="copy-button">Copy (Ctrl+C)</button>
+        <button id="cut-button">Cut (Ctrl+X)</button>
+        <button id="paste-button">Paste (Ctrl+V)</button>
+        <br><br>
+        <button id="downloadJsonButton">Descargar JSON</button>
+        <img src="model.jpg" alt="" width="200" height="200">
+    </div>
+  <canvas id="renderCanvas"></canvas>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script>
+  <script src="https://cdn.babylonjs.com/gui/babylon.gui.js"></script>
+  <script>
+    var canvas = document.getElementById("renderCanvas");
+    var engine = new BABYLON.Engine(canvas, true);
+    var scene = new BABYLON.Scene(engine);
+    var camera = new BABYLON.ArcRotateCamera("camera", 1, 0.8, 10, new BABYLON.Vector3(0, 0, 0), scene);
+    camera.attachControl(canvas, true);
+    var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+    var jsonParts = [
+    {
+        "name": "PuppyPI",
+        "models": "https://raw.githubusercontent.com/ravendano014/PuppyPI/main/",
+        "parts": [
+  {
+    "mesh_id": "ukaq",
+    "mesh_name": "s_base_link.STL",
+    "position": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "rotation": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "color": [
+      {
+        "r": 0.2784313725490196,
+        "g": 0.23529411764705882,
+        "b": 0.2235294117647059
+      }
+    ]
+  },
+  {
+    "mesh_id": "aaaa",
+    "mesh_name": "s_camera_link.STL",
+    "position": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "rotation": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "color": [
+      {
+        "r": 0.9921568627450981,
+        "g": 0.8627450980392157,
+        "b": 0.03137254901960784
+      }
+    ]
+  },
+  {
+    "mesh_id": "aaab",
+    "mesh_name": "s_lb_link1.STL",
+    "position": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "rotation": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "color": [
+      {
+        "r": 0.3686274509803922,
+        "g": 0.3607843137254902,
+        "b": 0.3137254901960784
+      }
+    ]
+  },
+  {
+    "mesh_id": "aaac",
+    "mesh_name": "s_lb_link2.STL",
+    "position": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "rotation": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "color": [
+      {
+        "r": 0.2784313725490196,
+        "g": 0.23529411764705882,
+        "b": 0.2235294117647059
+      }
+    ]
+  },
+  {
+    "mesh_id": "aaae",
+    "mesh_name": "s_lf_link1.STL",
+    "position": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "rotation": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "color": [
+      {
+        "r": 0.0784313725490196,
+        "g": 0.984313725490196,
+        "b": 0.01568627450980392
+      }
+    ]
+  },
+  {
+    "mesh_id": "aaaf",
+    "mesh_name": "s_lf_link2.STL",
+    "position": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "rotation": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "color": [
+      {
+        "r": 0.3686274509803922,
+        "g": 0.3607843137254902,
+        "b": 0.3137254901960784
+      }
+    ]
+  },
+  {
+    "mesh_id": "aaah",
+    "mesh_name": "s_rb_link1.STL",
+    "position": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "rotation": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "color": [
+      {
+        "r": 0.2784313725490196,
+        "g": 0.23529411764705882,
+        "b": 0.2235294117647059
+      }
+    ]
+  },
+  {
+    "mesh_id": "aaai",
+    "mesh_name": "s_rb_link2.STL",
+    "position": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "rotation": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "color": [
+      {
+        "r": 0.24313725490196078,
+        "g": 0.17254901960784313,
+        "b": 0.1568627450980392
+      }
+    ]
+  },
+  {
+    "mesh_id": "aaaj",
+    "mesh_name": "s_rf_link1.STL",
+    "position": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "rotation": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "color": [
+      {
+        "r": 0.3686274509803922,
+        "g": 0.3607843137254902,
+        "b": 0.3137254901960784
+      }
+    ]
+  },
+  {
+    "mesh_id": "aaak",
+    "mesh_name": "s_rf_link2.STL",
+    "position": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "rotation": [
+      {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    ],
+    "color": [
+      {
+        "r": 0.24313725490196078,
+        "g": 0.17254901960784313,
+        "b": 0.1568627450980392
+      }
+    ]
+  }
+]
+  }
+];
+
+        const localAxes = new BABYLON.AxesViewer(scene, 1);
+
+
+        // Cargar y posicionar cada parte del modelo 3D 
+        function loadAndPositionPart(part) {
+            var meshURL = jsonParts[0].models;
+            var meshName = part.mesh_name;
+
+            BABYLON.SceneLoader.ImportMesh("", meshURL, meshName, scene, function (meshes) {
+                // Colocar la parte en su posición
+                meshes[0].id = part.mesh_id;
+                meshes[0].name = part.mesh_name;
+                meshes[0].position = new BABYLON.Vector3(part.position[0].x, part.position[0].y, part.position[0].z);
+                meshes[0].rotation = new BABYLON.Vector3(BABYLON.Tools.ToRadians(part.rotation[0].x), BABYLON.Tools.ToRadians(part.rotation[0].y), BABYLON.Tools.ToRadians(part.rotation[0].z));
+            
+                meshes[0].material = new BABYLON.StandardMaterial("material", scene);
+                meshes[0].material.diffuseColor = new BABYLON.Color3.FromHexString(rgbToHex(part.color[0].r*255, part.color[0].g*255, part.color[0].b*255));
+            
+            });
+        }
+
+
+        for (var i = 0; i < jsonParts[0].parts.length; i++) {
+            loadAndPositionPart(jsonParts[0].parts[i], new BABYLON.Vector3(0, 0, 0));
+        }
+        // console.log(scene);
+
+        engine.runRenderLoop(function () {
+            scene.render();
+        });
+
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+
+
+    let pickedMesh = null;
+    scene.onPointerMove = function() {
+        var result = scene.pick(scene.pointerX, scene.pointerY);
+        if (result.pickedMesh !== pickedMesh) {            
+            if (pickedMesh) {
+                pickedMesh.disableEdgesRendering(); 
+            }
+
+            pickedMesh = result.pickedMesh;
+            if (pickedMesh) {
+                pickedMesh.edgesWidth = 40.0;
+                pickedMesh.edgesColor = new BABYLON.Color4(0, 1, 0.87);
+                pickedMesh.enableEdgesRendering();
+                selectedMesh = pickedMesh;
+
+                 // Mostrar propiedades en la barra lateral
+                document.getElementById("name").textContent = pickedMesh.name;
+                document.getElementById("position").textContent = `X: ${pickedMesh.position.x.toFixed(2)}, Y: ${pickedMesh.position.y.toFixed(2)}, Z: ${pickedMesh.position.z.toFixed(2)}`;
+                document.getElementById("rotation").textContent = `X: ${BABYLON.Tools.ToDegrees(pickedMesh.rotation.x).toFixed(2)}°, Y: ${BABYLON.Tools.ToDegrees(pickedMesh.rotation.y).toFixed(2)}°, Z: ${BABYLON.Tools.ToDegrees(pickedMesh.rotation.z).toFixed(2)}°`;
+                document.getElementById("color").textContent = `Color: ${pickedMesh.material ? pickedMesh.material.diffuseColor.toString() : "N/A"}`;
+
+                window.addEventListener("keydown", function (event) {
+                var speed = 0.01;
+                switch (event.key) {
+                    case "q":
+                    pickedMesh.position.x += speed;
+                    break;
+                    case "a":
+                    pickedMesh.position.x -= speed;
+                    break;
+                    case "w":
+                    pickedMesh.position.y += speed;
+                    break;
+                    case "s":
+                    pickedMesh.position.y -= speed;
+                    break;
+                    case "e":
+                    pickedMesh.position.z += speed;
+                    break;
+                    case "d":
+                    pickedMesh.position.z -= speed;
+                    break;
+                    case "r":
+                    pickedMesh.rotation.x += BABYLON.Tools.ToRadians(speed);
+                    break;
+                    case "f":
+                    pickedMesh.rotation.x -= BABYLON.Tools.ToRadians(speed);
+                    break;
+                    case "t":
+                    pickedMesh.rotation.y += BABYLON.Tools.ToRadians(speed);
+                    break;
+                    case "g":
+                    pickedMesh.rotation.y -= BABYLON.Tools.ToRadians(speed);
+                    break;
+                    case "y":
+                    pickedMesh.rotation.z += BABYLON.Tools.ToRadians(speed);
+                    break;
+                    case "h":
+                    pickedMesh.rotation.z -= BABYLON.Tools.ToRadians(speed);
+                    break;
+                }
+
+                // Encuentra la parte correspondiente en jsonParts y actualiza sus propiedades
+                var partIndex = jsonParts[0].parts.findIndex(function (jsonPart) {
+                return jsonPart.mesh_id === pickedMesh.id;
+                });
+
+                if (partIndex !== -1) {
+                    var updatedPart = jsonParts[0].parts[partIndex];
+                    updatedPart.position[0].x = pickedMesh.position.x;
+                    updatedPart.position[0].y = pickedMesh.position.y;
+                    updatedPart.position[0].z = pickedMesh.position.z;
+                    updatedPart.rotation[0].x = BABYLON.Tools.ToDegrees(pickedMesh.rotation.x);
+                    updatedPart.rotation[0].y = BABYLON.Tools.ToDegrees(pickedMesh.rotation.y);
+                    updatedPart.rotation[0].z = BABYLON.Tools.ToDegrees(pickedMesh.rotation.z);
+                    updatedPart.color[0] = pickedMesh.material.diffuseColor;
+                }
+                // console.log(jsonParts);
+
+                });
+            
+            }
+        }
+    };
+
+// Función para recopilar la información actualizada de las partes y descargar el JSON
+function downloadJson() {
+  // console.log(scene);
+  const updatedParts = jsonParts[0].parts.map((part) => {
+    const mesh = scene.getMeshByID(part.mesh_id);
+    return {
+      mesh_id: part.mesh_id,
+      mesh_name: part.mesh_name,
+      position:  [{
+        x: mesh.position.x,
+        y: mesh.position.y,
+        z: mesh.position.z,
+      }],
+      rotation: [{
+        x: BABYLON.Tools.ToDegrees(mesh.rotation.x),
+        y: BABYLON.Tools.ToDegrees(mesh.rotation.y),
+        z: BABYLON.Tools.ToDegrees(mesh.rotation.z),
+      }],
+      color: [mesh.material.diffuseColor]
+    };
+  });
+
+  const jsonContent = JSON.stringify(updatedParts, null, 2);
+  const blob = new Blob([jsonContent], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  // Crear un enlace para la descarga
+  const downloadLink = document.createElement("a");
+  downloadLink.href = url;
+  downloadLink.download = "model.json";
+  downloadLink.click();
+
+  // Liberar la URL del objeto Blob
+  URL.revokeObjectURL(url);
+}
+
+// Asigna la función downloadJson al botón de descarga
+document.getElementById("downloadJsonButton").addEventListener("click", downloadJson);
+
+document.addEventListener("keydown", function (event) {
+    if (event.key === "z") {
+        // Llama a la función changeColor() al presionar la tecla "Z"
+        changeColor();
+    }
+    if (event.ctrlKey) {
+        if (event.key === 'c' || event.key === 'C') {
+            // Ctrl+C: Copiar las shapes seleccionadas al portapapeles
+            copyPart();
+        } else if (event.key === 'x' || event.key === 'X') {
+            // Ctrl+X: Cortar las shapes seleccionadas al portapapeles y eliminarlas
+            cutPart();
+        } else if (event.key === 'v' || event.key === 'V') {
+            // Ctrl+V: Pegar las shapes desde el portapapeles
+            pastePart();
+        }
+    }
+});
+
+function changeColor() {
+    const colorPicker = document.getElementById("colorPicker");
+    const selectedColor = colorPicker.value;
+
+    if (pickedMesh) {
+        // Cambiar el color del material de la parte seleccionada
+        pickedMesh.material = new BABYLON.StandardMaterial("material", scene);
+        pickedMesh.material.diffuseColor = new BABYLON.Color3.FromHexString(selectedColor);
+    }
+}
+
+function rgbToHex(r, g, b) {
+    const toHex = (value) => {
+        const hex = value.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+    };
+    
+    const red = toHex(r);
+    const green = toHex(g);
+    const blue = toHex(b);
+    
+    return "#" + red + green + blue;
+}
+
+function hexToRgb(hex) {
+    const trimmedHex = hex.replace(/^#/, "");
+    
+    if (trimmedHex.length === 3) {
+        const r = parseInt(trimmedHex[0], 16) * 17;
+        const g = parseInt(trimmedHex[1], 16) * 17;
+        const b = parseInt(trimmedHex[2], 16) * 17;
+        return { r, g, b };
+    } else if (trimmedHex.length === 6) {
+        const r = parseInt(trimmedHex.substring(0, 2), 16);
+        const g = parseInt(trimmedHex.substring(2, 4), 16);
+        const b = parseInt(trimmedHex.substring(4, 6), 16);
+        return { r, g, b };
+    }
+    
+    throw new Error("#000000");
+}
+
+const copyButton = document.getElementById("copy-button");
+const cutButton = document.getElementById("cut-button");
+const pasteButton = document.getElementById("paste-button");
+
+// Variable para almacenar los elementos copiados o cortados
+let copiedOrCutData = null;
+let copiedPart = null;
+
+// Evento para copiar
+function copyPart() {
+    if (pickedMesh) {
+      copiedOrCutData = pickedMesh ? { ...pickedMesh } : null; // Clona la figura seleccionada
+      copiedPart =  scene.getMeshByID(copiedOrCutData.id);
+      copiedPartData = {
+      mesh_id: randomName(),
+      mesh_name: copiedPart.name,
+      position:  [{
+        x: copiedPart.position.x+20,
+        y: copiedPart.position.y+20,
+        z: copiedPart.position.z,
+      }],
+      rotation: [{
+        x: BABYLON.Tools.ToDegrees(copiedPart.rotation.x),
+        y: BABYLON.Tools.ToDegrees(copiedPart.rotation.y),
+        z: BABYLON.Tools.ToDegrees(copiedPart.rotation.z),
+      }],
+      color: [copiedPart.material.diffuseColor]
+    };
+    }
+  
+}
+
+// Evento para cortar
+function cutPart() {
+    if (pickedMesh) {
+        copiedOrCutData = { ...pickedMesh }; // Clona la figura seleccionada
+        // Elimina la figura seleccionada del arreglo shapes
+        const index = jsonParts.indexOf(pickedMesh);
+        if (index !== -1) {
+            jsonParts.splice(index, 1);
+        }
+        scene.removeMesh(pickedMesh);
+        pickedMesh.dispose();
+        pickedMesh = null;
+        
+    }
+}
+
+// Evento para pegar
+function pastePart() {
+    if (pickedMesh) {
+         if (copiedOrCutData) {
+          // Concatena los elementos copiados o cortados al arreglo original
+          jsonParts.push(copiedPartData);
+          //console.log(copiedPartData);
+          loadAndPositionPart(copiedPartData, new BABYLON.Vector3(0, 0, 0));
+        }
+   }
+}
+
+function randomName() {
+    const allowedchars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let randomName = '';
+
+    for (let i = 0; i < 5; i++) {
+        const randomIndex = Math.floor(Math.random() * allowedchars.length);
+        randomName += allowedchars.charAt(randomIndex);
+    }
+
+    return randomName;
+}
+    </script>
+</body>
+</html>
